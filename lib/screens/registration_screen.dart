@@ -23,71 +23,75 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ModalProgressHUD(
-        inAsyncCall: showSpiner,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Hero(
-                tag: 'logo',
-                child: Container(
-                  height: 200.0,
-                  child: Image.asset('images/logo.png'),
+      body: SafeArea(
+        child: ModalProgressHUD(
+          inAsyncCall: showSpiner,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Flexible(
+                  child: Hero(
+                    tag: 'logo',
+                    child: Container(
+                      height: 200.0,
+                      child: Image.asset('images/logo.png'),
+                    ),
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                  keyboardType: TextInputType.emailAddress,
+                SizedBox(
+                  height: 48.0,
+                ),
+                TextField(
+                    keyboardType: TextInputType.emailAddress,
+                    textAlign: TextAlign.center,
+                    onChanged: (value) {
+                      email = value;
+                    },
+                    style: kTextFieldStyle,
+                    decoration: kTextFieldDecoration.copyWith(
+                        hintText: 'Enter your email')),
+                SizedBox(
+                  height: 8.0,
+                ),
+                TextField(
                   textAlign: TextAlign.center,
+                  obscureText: true,
                   onChanged: (value) {
-                    email = value;
+                    pass = value;
                   },
                   style: kTextFieldStyle,
                   decoration: kTextFieldDecoration.copyWith(
-                      hintText: 'Enter your email')),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                textAlign: TextAlign.center,
-                obscureText: true,
-                onChanged: (value) {
-                  pass = value;
-                },
-                style: kTextFieldStyle,
-                decoration: kTextFieldDecoration.copyWith(
-                    hintText: 'Enter your password.'),
-              ),
-              SizedBox(
-                height: 24.0,
-              ),
-              CustomButtons(
-                text: 'Register',
-                color: Colors.blueAccent,
-                onPressed: () async {
-                  setState(() {
-                    showSpiner = true;
-                  });
-                  try {
-                    final newUser = await _auth.createUserWithEmailAndPassword(
-                        email: email.trim(), password: pass);
-                    if (newUser != null) {
-                      Navigator.pushNamed(context, ChatScreen.id);
+                      hintText: 'Enter your password.'),
+                ),
+                SizedBox(
+                  height: 24.0,
+                ),
+                CustomButtons(
+                  text: 'Register',
+                  color: Colors.blueAccent,
+                  onPressed: () async {
+                    setState(() {
+                      showSpiner = true;
+                    });
+                    try {
+                      final newUser = await _auth.createUserWithEmailAndPassword(
+                          email: email.trim(), password: pass);
+                      if (newUser != null) {
+                        Navigator.pushNamed(context, ChatScreen.id);
+                      }
+                    } catch (e) {
+                      print(e);
                     }
-                  } catch (e) {
-                    print(e);
-                  }
-                  setState(() {
-                    showSpiner = false;
-                  });
-                },
-              ),
-            ],
+                    setState(() {
+                      showSpiner = false;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
